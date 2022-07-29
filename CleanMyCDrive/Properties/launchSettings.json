@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CleanMyCDrive": {
+      "commandName": "Project",
+      "commandLineArgs": "-v"
+    }
+  }
+}
