@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanMyCDrive", "CleanMyCDrive\CleanMyCDrive.csproj", "{827EFD66-E568-456B-B897-721958398D94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{827EFD66-E568-456B-B897-721958398D94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827EFD66-E568-456B-B897-721958398D94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827EFD66-E568-456B-B897-721958398D94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827EFD66-E568-456B-B897-721958398D94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {235BAA61-8236-4307-A3C7-D82400737244}
+	EndGlobalSection
+EndGlobal
