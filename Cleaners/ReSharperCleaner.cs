@@ -1,4 +1,4 @@
-﻿namespace CleanMyCDrive.Cleaners;
+﻿namespace Cleaners;
 public class ReSharperCleaner : CleanerBase
 {
 

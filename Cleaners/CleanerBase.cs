@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace CleanMyCDrive.Cleaners;
+namespace Cleaners;
 
 public abstract class CleanerBase : ICleaner
 {
@@ -16,7 +16,7 @@ public abstract class CleanerBase : ICleaner
     /// <returns></returns>
     public abstract IReadOnlyList<string> GetItemsToClean();
 
-    public void Clean()
+    public virtual void Clean()
     {
         var items = GetItemsToClean();
         foreach (var item in items)
@@ -47,7 +47,7 @@ public abstract class CleanerBase : ICleaner
 
             var directory = new DirectoryInfo(path);
             var removed = CleanDirectoryContent(directory);
-            
+
             if (removed)
             {
                 if (shouldRemoveRoot)
@@ -75,7 +75,7 @@ public abstract class CleanerBase : ICleaner
         var filesSizeCleaned = 0L;
         var filesCount = 0L;
         var dirCount = 0L;
-        
+
         Log.Verbose("Cleaning content of {path}.", directory.Name);
         foreach (var subDirectory in directory.EnumerateDirectories())
         {

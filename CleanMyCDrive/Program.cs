@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using CleanMyCDrive.Cleaners;
+using Cleaners;
+using CleanMyCDrive;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
@@ -37,8 +38,10 @@ try
 catch (Exception e)
 {
     Log.Fatal(e, "Unhandled exception.");
+    return -1;
 }
 finally
 {
     Log.CloseAndFlush();
 }
+return 0;

@@ -1,4 +1,4 @@
-﻿namespace CleanMyCDrive.Cleaners;
+﻿namespace Cleaners;
 
 public class RoslynCleaner : CleanerBase
 {
@@ -12,6 +12,6 @@ public class RoslynCleaner : CleanerBase
     /// <returns></returns>
     public override IReadOnlyList<string> GetItemsToClean()
     {
-        return new List<string> {@"%LocalAppData%\Microsoft\VisualStudio\Roslyn\Cache\*"};
+        return new List<string> { @"%LocalAppData%\Microsoft\VisualStudio\Roslyn\Cache\*" };
     }
 }
