@@ -20,6 +20,16 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
+    if (args.Length > 0 && args[0].Equals("snapshot", StringComparison.OrdinalIgnoreCase))
+    {
+        return SnapshotRunner.Run(args);
+    }
+
+    if (args.Length > 0 && args[0].Equals("compare", StringComparison.OrdinalIgnoreCase))
+    {
+        return SnapshotRunner.Compare(args);
+    }
+
     Log.Information("Start Cleaning");
 
     var cleaners = new List<ICleaner>
