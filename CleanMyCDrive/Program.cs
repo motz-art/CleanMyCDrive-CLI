@@ -1,12 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Cleaners;
+﻿using Cleaners;
 using CleanMyCDrive;
+using PackageManagersCleaners;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
 
-Console.WriteLine("Clean My C: Drive v1.0 Beta!");
+Console.WriteLine("Clean My C: Drive v1.0 Beta.");
 
 var logLevel = args.Contains("-v") ? LogEventLevel.Verbose :
     args.Contains("-d") ? LogEventLevel.Debug :
@@ -34,8 +33,11 @@ try
 
     var cleaners = new List<ICleaner>
     {
+        
+        new NuGetCleaner(),
+        new NpmCleaner(),
         new RoslynCleaner(),
-        new ReSharperCleaner()
+        new ReSharperCleaner(),
     };
 
     foreach (var cleaner in cleaners)

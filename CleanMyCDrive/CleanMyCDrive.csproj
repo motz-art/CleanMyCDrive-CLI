@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cleaners\Cleaners.csproj" />
+    <ProjectReference Include="..\PackageManagersCleaners\PackageManagersCleaners.csproj" />
   </ItemGroup>
 
 </Project>
