@@ -33,7 +33,6 @@ try
 
     var cleaners = new List<ICleaner>
     {
-        
         new NuGetCleaner(),
         new NpmCleaner(),
         new RoslynCleaner(),

@@ -132,6 +132,82 @@ public class SnapshotReporter
         dirScanErrors++;
     }
 
+    public static SnapshotCompareReportNode CompareAndReduce(SnapshotNode? old, SnapshotNode? current)
+    {
+        var result = Compare(old, current);
+
+        return Reduce(result);
+    }
+
+    private static SnapshotCompareReportNode Reduce(SnapshotCompareReportNode node)
+    {
+        if (!node.IsDirectory || node.SubItems == null)
+        {
+            return node;
+        }
+
+        var hasChanges = false;
+
+        var subItems = node.SubItems.ToList();
+        for (int i = subItems.Count - 1; i >= 0; i--)
+        {
+            var item = subItems[i];
+            if (item.IsDirectory)
+            {
+                var nItem = Reduce(item);
+                if (nItem.Status == SnapshotCompareReportNodeStatus.Unchanged)
+                {
+                    subItems.RemoveAt(i);
+                }
+                else
+                {
+                    subItems[i] = nItem;
+                    hasChanges = true;
+                }
+            }
+            else
+            {
+                if (item.TotalSizeDiff == 0)
+                {
+                    subItems.RemoveAt(i);
+                }
+                else
+                {
+                    hasChanges = true;
+                }
+            }
+        }
+
+        var status = node.Status;
+
+        if (hasChanges)
+        {
+            if (status == SnapshotCompareReportNodeStatus.Unchanged)
+            {
+                status = SnapshotCompareReportNodeStatus.Changed;
+            }
+        }
+        else
+        {
+            status = SnapshotCompareReportNodeStatus.Unchanged;
+        }
+
+        return new SnapshotCompareReportNode
+        {
+            Status = status,
+            IsDirectory = true,
+            SubItems = subItems,
+            Name = node.Name,
+            LastModifiedUtc = node.LastModifiedUtc,
+            TotalSize = node.TotalSize,
+            TotalSizeDiff = node.TotalSizeDiff,
+            TotalFilesCount = node.TotalFilesCount,
+            TotalAddFilesCount = node.TotalAddFilesCount,
+            TotalRemovedFilesCount = node.TotalRemovedFilesCount
+        };
+    }
+
+
     public static SnapshotCompareReportNode Compare(SnapshotNode? old, SnapshotNode? current)
     {
         if (old == null && current == null) throw new ArgumentException($"Both {nameof(old)} and {nameof(current)} should not be null.");
@@ -147,7 +223,8 @@ public class SnapshotReporter
                 LastModifiedUtc = existing.LastModifiedUtc,
                 Name = existing.Name,
                 TotalFilesCount = existing.TotalFilesCount,
-                TotalFilesCountDiff = existing.TotalFilesCount,
+                TotalAddFilesCount = existing.TotalFilesCount,
+                TotalRemovedFilesCount = 0,
                 TotalSize = existing.TotalSize,
                 TotalSizeDiff = existing.TotalSize,
                 SubItems = existing.SubItems?.Select(x => Compare(null, x)).ToList(),
@@ -163,8 +240,9 @@ public class SnapshotReporter
                 LastModifiedUtc = existing.LastModifiedUtc,
                 Name = existing.Name,
                 TotalFilesCount = existing.TotalFilesCount,
-                TotalFilesCountDiff = -existing.TotalFilesCount,
-                TotalSize = existing.TotalSize,
+                TotalAddFilesCount = 0,
+                TotalRemovedFilesCount = existing.TotalFilesCount,
+                TotalSize = 0,
                 TotalSizeDiff = -existing.TotalSize,
                 SubItems = existing.SubItems?.Select(x => Compare(x, null)).ToList(),
             };
@@ -182,6 +260,13 @@ public class SnapshotReporter
                 throw new ArgumentException($"Current node {nameof(current.SubItems)} should not be null.");
         }
 
+        var subItems = old.SubItems != null && current.SubItems != null
+            ? CompareItems(old.SubItems, current.SubItems)
+            : null;
+
+        var addFilesCount = subItems?.Sum(x => x.TotalAddFilesCount) ?? current.SubItems?.Sum(x => x.TotalFilesCount) ?? 0;
+        var removedFilesCount = subItems?.Sum(x => x.TotalRemovedFilesCount) ?? old.SubItems?.Sum(x => x.TotalFilesCount) ?? 0;
+        
         return new SnapshotCompareReportNode
         {
             Status = old.LastModifiedUtc == current.LastModifiedUtc
@@ -191,12 +276,11 @@ public class SnapshotReporter
             LastModifiedUtc = current.LastModifiedUtc,
             Name = current.Name,
             TotalFilesCount = existing.TotalFilesCount,
-            TotalFilesCountDiff = current.TotalFilesCount-old.TotalFilesCount,
+            TotalAddFilesCount = addFilesCount,
+            TotalRemovedFilesCount = removedFilesCount,
             TotalSize = existing.TotalSize,
             TotalSizeDiff = current.TotalSize-old.TotalSize,
-            SubItems = old.SubItems != null && current.SubItems != null
-                ? CompareItems(old.SubItems, current.SubItems)
-                : null,
+            SubItems = subItems,
         };
     }
 

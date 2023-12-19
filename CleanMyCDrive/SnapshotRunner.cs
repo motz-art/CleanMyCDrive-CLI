@@ -64,7 +64,7 @@ public static class SnapshotRunner
         var old = SnapshotAccessor.Read(args[1]);
         var current = SnapshotAccessor.Read(args[2]);
 
-        var compareReport = SnapshotReporter.Compare(old, current);
+        var compareReport = SnapshotReporter.CompareAndReduce(old, current);
         
         var resultsFileName = "CompareResults.json";
         var resIndex = Array.IndexOf(args, "-r");
